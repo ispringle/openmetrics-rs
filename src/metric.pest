@@ -1,0 +1,25 @@
+WHITESPACE = _{ " " }
+metricName = @{ (ASCII_ALPHANUMERIC | ":" | "_")+ }
+
+helpText = { (ASCII_ALPHANUMERIC | "." | "_" | "-" | "/" | "\\" | ":")+ }
+helpLine = { "# HELP" ~  metricName ~ helpText ~ NEWLINE }
+
+typeText = { ("counter"|"gauge"|"histogram"|"summary") }
+typeLine = { "# TYPE" ~ metricName ~  typeText ~ NEWLINE }
+
+labelKey = { (ASCII_ALPHA|"_")+ }
+labelValue = { (ASCII_ALPHANUMERIC|"_")+ }
+label = { labelKey ~ "=" ~ "\"" ~ labelValue ~ "\"" }
+labels = { "{" ~ label ~ ("," ~ label)* ~ "}" }
+
+metricContext = @{ metricName ~ labels* }
+metricValue = { (ASCII_DIGIT|"."|"e+")+ }
+metricLine = { metricContext ~ metricValue ~ NEWLINE*}
+
+metric = { (helpLine)* ~ (typeLine)* ~ metricLine }
+
+metrics = {
+  SOI ~
+  metric* ~
+  EOI
+}

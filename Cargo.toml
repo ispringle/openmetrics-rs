@@ -1,0 +1,9 @@
+[package]
+name = "openmetrics"
+version = "0.1.0"
+authors = ["Ian Pringle <ipringle2@liberty.edu>"]
+edition = "2018"
+
+[dependencies]
+pest = "2.0"
+pest_derive = "2.0"
