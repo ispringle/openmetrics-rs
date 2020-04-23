@@ -16,7 +16,7 @@ metricContext = @{ metricName ~ labels* }
 metricValue = { (ASCII_DIGIT|"."|"e+"|"NaN")+ }
 metricLine = { metricContext ~ metricValue ~ NEWLINE*}
 
-metric = { (helpLine)* ~ (typeLine)* ~ metricLine }
+metric = { (helpLine)* ~ (typeLine)* ~ (metricLine)+ }
 
 metrics = {
   SOI ~
