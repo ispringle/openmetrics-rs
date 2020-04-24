@@ -1,0 +1,10 @@
+[package]
+name = "get-metric"
+description = "Get a single metric from an OpenMetrics source."
+license = "MIT"
+version = "0.1.0"
+authors = ["Ian S. Pringle <ipringle2@liberty.edu>"]
+edition = "2018"
+
+[dependencies]
+openmetrics = { path = "../../lib" }
