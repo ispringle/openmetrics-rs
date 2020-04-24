@@ -1,5 +1,5 @@
 # OpenMetrics-rs
-![Rust](https://github.com/pard68/openmetrics-rs/workflows/Rust/badge.svg)
+![Rust](https://github.com/pard68/openmetrics-rs/workflows/Rust/badge.svg?branch=master&event=push)
 
 An OpenMetrics parser in Rust 🦀
 
