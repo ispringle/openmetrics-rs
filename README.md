@@ -37,6 +37,8 @@ Sample metrics data:
 # TODO
 - [X] bin -> lib
 - [ ] consume URLs
+- [ ] consume specific file
+- [ ] methods to specify specific alternative output (JSON/YAML/TOML/string/etc)
 - [X] Add label and metric logic to convert parsed pest data into usable data
 - [ ] parse labels within each metricLine
 - [ ] reconsider best way to handle labels and special labels (such as quartile)
