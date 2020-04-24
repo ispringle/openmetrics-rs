@@ -1,23 +1,51 @@
+//! # Openmetrics-rs
+//!
+//! ## Usage
+//!
+//! `Cargo.toml`
+//! ```toml
+//! ...
+//! [dependencies]
+//! openmetrics = "0.2"
+//! ...
+//! ```
+//!
+//! `main.rs`
+//! ```rust
+//! extern crate openmetrics;
+//!
+//! use std::fs;
+//! use openmetrics::parse_metrics;
+//! use openmetrics::metrics::Metrics;
+//!
+//! fn get_metrics(metric_string: String) -> Metrics {
+//!     parse_metrics(metric_string)
+//! }
+//!
+//! fn main() {
+//! let unparsed_file = fs::read_to_string("test.prom").expect("cannot read file!");
+//! println!("{:#?}", get_metrics(unparsed_file));
+//! }
+//! ```
+
 extern crate pest;
 #[macro_use]
 extern crate pest_derive;
 
 use pest::Parser;
 
-mod metrics;
+pub mod metrics;
 
 #[derive(Parser)]
 #[grammar = "metric_grammar.pest"]
 pub struct MetricParser;
 
-pub fn parse_metrics(unparsed_metrics: String) {
+pub fn parse_metrics(unparsed_metrics: String) -> metrics::Metrics {
     let raw_metrics = MetricParser::parse(Rule::metrics, &unparsed_metrics)
         .expect("unsuccessful parse 😥")
         .next().unwrap();
 
-    //let mut metrics: HashMap<String, metrics::MetricGroup> = HashMap::new();
     let mut metrics = metrics::Metrics::new();
-
     for raw_metric in raw_metrics.into_inner() {
         let mut base_metric_name = String::new();
         for line in raw_metric.into_inner() {
@@ -69,12 +97,9 @@ pub fn parse_metrics(unparsed_metrics: String) {
                             metrics::MetricGroup::new_with_metric(
                                 metric_name, metric_text));
                 }
-                _ => {
-        println!("{:#?}", line.into_inner());
-                }
-
+                _ => { () }
             }
         }
     }
-    println!("{:#?}", metrics);
+    metrics
 }
