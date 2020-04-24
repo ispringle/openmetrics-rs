@@ -2,7 +2,6 @@ extern crate pest;
 #[macro_use]
 extern crate pest_derive;
 
-use std::fs;
 use pest::Parser;
 
 mod metrics;
@@ -11,9 +10,8 @@ mod metrics;
 #[grammar = "metric_grammar.pest"]
 pub struct MetricParser;
 
-fn main() {
-    let unparsed_file = fs::read_to_string("test.prom").expect("cannot read file!");
-    let raw_metrics = MetricParser::parse(Rule::metrics, &unparsed_file)
+pub fn parse_metrics(unparsed_metrics: String) {
+    let raw_metrics = MetricParser::parse(Rule::metrics, &unparsed_metrics)
         .expect("unsuccessful parse 😥")
         .next().unwrap();
 

@@ -1,13 +1,5 @@
-[package]
-name = "openmetrics"
-description = "A Rust native parser for the OpenMetrics standard"
-readme = "./README.md"
-repository = "https://github.com/pard68/openmetrics-rs"
-version = "0.1.3"
-license = "MIT"
-authors = ["Ian Pringle <ipringle2@liberty.edu>"]
-edition = "2018"
-
-[dependencies]
-pest = "2.0"
-pest_derive = "2.0"
+[workspace]
+members = [
+  "lib",
+  "examples/get-metric"
+]
