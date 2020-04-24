@@ -22,9 +22,9 @@ pub struct Metric( pub Vec<Label> );
 
 impl Metric {
     pub fn add(metric_name: &str, metric_text: &str) -> Label {
-        let mut metricHash = HashMap::new();
-        metricHash.insert("value".to_string(), metric_text.to_string());
-        metricHash
+        let mut metric_hash = HashMap::new();
+        metric_hash.insert("value".to_string(), metric_text.to_string());
+        metric_hash
     }
 }
 
@@ -78,7 +78,7 @@ pub type Metrics = HashMap<String, MetricGroup>;
 //}
 
 pub fn add(metric_name: &str, metric_text: &str) -> Label {
-    let mut metricHash = HashMap::new();
-    metricHash.insert("value".to_string(), metric_text.to_string());
-    metricHash
+    let mut metric_hash = HashMap::new();
+    metric_hash.insert("value".to_string(), metric_text.to_string());
+    metric_hash
 }
