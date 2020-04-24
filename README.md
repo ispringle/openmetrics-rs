@@ -1,6 +1,7 @@
 # OpenMetrics-rs
 ![Rust](https://github.com/pard68/openmetrics-rs/workflows/Rust/badge.svg?branch=master&event=push)
 [![Docs](https://docs.rs/openmetrics/badge.svg)](https://docs.rs/openmetrics)
+[![Crates.io](https://img.shields.io/crates/v/openmetrics)](https://crates.io/crates/openmetrics)
 
 An OpenMetrics parser in Rust 🦀
 
