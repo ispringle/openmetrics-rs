@@ -2,14 +2,21 @@
 
 An OpenMetrics parser in Rust 🦀
 
-# Usage
+## Example
 
-Let ya know when it's usable 😂
+```
+extern crate openmetrics;
+use std::fs;
+
+fn main() {
+    let unparsed_file = fs::read_to_string("test.prom").expect("cannot read file!");
+    openmetrics::parse_metrics(unparsed_file);
+}
+```
 
 # TODO
-- [ ] AST
-- [ ] bin -> lib
+- [X] bin -> lib
 - [ ] consume URLs
-- [ ] Add label and metric logic to convert parsed pest data into usable data
+- [X] Add label and metric logic to convert parsed pest data into usable data
+- [ ] parse labels within each metricLine
 - [ ] reconsider best way to handle labels and special labels (such as quartile)
-- [ ] 
