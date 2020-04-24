@@ -8,7 +8,7 @@ use pest::Parser;
 mod metrics;
 
 #[derive(Parser)]
-#[grammar = "metric.pest"]
+#[grammar = "metric_grammar.pest"]
 pub struct MetricParser;
 
 fn main() {
