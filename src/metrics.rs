@@ -18,14 +18,21 @@ impl Default for MetricType {
 }
 
 #[derive(Default, Debug)]
-pub struct Metric( Vec<Label> );
+pub struct Metric( pub Vec<Label> );
+
+impl Metric {
+    pub fn add(metric_name: &str, metric_text: &str) -> Label {
+        let mut metricHash = HashMap::new();
+        metricHash.insert("value".to_string(), metric_text.to_string());
+        metricHash
+    }
+}
 
 #[derive(Default, Debug)]
 pub struct MetricGroup {
     pub help: String,
     pub r#type: MetricType,
-    pub label: Label,
-    pub metric: Vec<Metric>,
+    pub metric: Metric,
 }
 
 impl MetricGroup {
@@ -33,7 +40,6 @@ impl MetricGroup {
         MetricGroup {
             help: help_string.to_string(),
             r#type: Default::default(),
-            label: Default::default(),
             metric: Default::default()
         }
     }
@@ -48,17 +54,16 @@ impl MetricGroup {
                 "summary" => MetricType::SUMMARY,
                 _ => MetricType::NONE,
             },
-            label: Default::default(),
             metric: Default::default()
         }
     }
 
-    pub fn new_with_label(label_key: &str, label_value: &str) -> Self {
+    pub fn new_with_metric(metric_name: &str, metric_text: &str) -> Self {
         MetricGroup {
             help: Default::default(),
             r#type: Default::default(),
-            label: Default::default(),
             metric: Default::default()
+            //metric: metric_text.to_string()
         }
     }
 }
@@ -71,3 +76,9 @@ pub type Metrics = HashMap<String, MetricGroup>;
 //        Default::default()
 //    }
 //}
+
+pub fn add(metric_name: &str, metric_text: &str) -> Label {
+    let mut metricHash = HashMap::new();
+    metricHash.insert("value".to_string(), metric_text.to_string());
+    metricHash
+}

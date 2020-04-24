@@ -21,25 +21,32 @@ fn main() {
     let mut metrics = metrics::Metrics::new();
 
     for raw_metric in raw_metrics.into_inner() {
+        let mut base_metric_name = String::new();
         for line in raw_metric.into_inner() {
             match line.as_rule() {
                 Rule::helpLine => {
                     let mut inner = line.into_inner();
-                    metrics.entry(inner.next().unwrap().as_str().to_string())
-                        .and_modify(
-                            |m| m.help = inner.next().unwrap().as_str().to_string()
-                        )
-                        .or_insert(
-                            metrics::MetricGroup::new_with_help(
-                                inner.next().unwrap().as_str()
-                            )
-                        );
+                    let metric_name = inner.next().unwrap().as_str().to_string();
+                    base_metric_name = metric_name.clone();
+                    let help_text = match inner.next() {
+                        Some(t) => t.as_str(),
+                        _ => "",
+                    };
+                    metrics.entry(metric_name)
+                        .and_modify(|m| m.help = help_text.to_string())
+                        .or_insert(metrics::MetricGroup::new_with_help(help_text));
                 }
                 Rule::typeLine => {
                     let mut inner = line.into_inner();
-                    metrics.entry(inner.next().unwrap().as_str().to_string())
+                    let metric_name = inner.next().unwrap().as_str().to_string();
+                    base_metric_name = metric_name.clone();
+                    let type_text = match inner.next() {
+                        Some(t) => t.as_str(),
+                        _ => "",
+                    };
+                    metrics.entry(metric_name)
                         .and_modify(
-                            |m| m.r#type = match inner.next().unwrap().as_str() {
+                            |m| m.r#type = match type_text {
                                 "counter" => metrics::MetricType::COUNTER,
                                 "gauge" => metrics::MetricType::GAUGE,
                                 "histogram" => metrics::MetricType::HISTOGRAM,
@@ -47,10 +54,22 @@ fn main() {
                                 _ => metrics::MetricType::NONE,
                             })
                         .or_insert(
-                            match inner.next() {
-                                Some(t) => metrics::MetricGroup::new_with_type(t.as_str()),
-                                _ => metrics::MetricGroup::new_with_type(""),
-                            });
+                            metrics::MetricGroup::new_with_type(type_text));
+                }
+                Rule::metricLine => {
+                    let mut inner = line.into_inner();
+                    let metric_name = inner.next().unwrap().as_str();
+                    let metric_text = match inner.next() {
+                        Some(t) => t.as_str(),
+                        _ => "",
+                    };
+                    metrics.entry(base_metric_name.clone())
+                        .and_modify(
+                            |m| m.metric.0.push(
+                                metrics::add(metric_name, metric_text)))
+                        .or_insert(
+                            metrics::MetricGroup::new_with_metric(
+                                metric_name, metric_text));
                 }
                 _ => {
         println!("{:#?}", line.into_inner());
@@ -59,6 +78,5 @@ fn main() {
             }
         }
     }
-
-println!("{:#?}", metrics);
+    println!("{:#?}", metrics);
 }
