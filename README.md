@@ -1,4 +1,5 @@
 # OpenMetrics-rs
+![Rust](https://github.com/pard68/openmetrics-rs/workflows/Rust/badge.svg)
 
 An OpenMetrics parser in Rust 🦀
 
