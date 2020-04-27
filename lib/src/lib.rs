@@ -32,20 +32,22 @@ extern crate pest;
 #[macro_use]
 extern crate pest_derive;
 
+use std::fs;
 use pest::Parser;
 
 pub mod metrics;
+use metrics::{MetricGroupBuilder, Metrics, MetricType};
 
 #[derive(Parser)]
 #[grammar = "metric_grammar.pest"]
 pub struct MetricParser;
 
-pub fn parse_metrics(unparsed_metrics: String) -> metrics::Metrics {
+pub fn parse_metrics(unparsed_metrics: String) -> Metrics {
     let raw_metrics = MetricParser::parse(Rule::metrics, &unparsed_metrics)
         .expect("unsuccessful parse 😥")
         .next().unwrap();
 
-    let mut metrics = metrics::Metrics::new();
+    let mut metrics = Metrics::new();
     for raw_metric in raw_metrics.into_inner() {
         let mut base_metric_name = String::new();
         for line in raw_metric.into_inner() {
@@ -60,7 +62,9 @@ pub fn parse_metrics(unparsed_metrics: String) -> metrics::Metrics {
                     };
                     metrics.entry(metric_name)
                         .and_modify(|m| m.help = help_text.to_string())
-                        .or_insert(metrics::MetricGroup::new_with_help(help_text));
+                        .or_insert(MetricGroupBuilder::new()
+                                    .help(help_text)
+                                    .build());
                 }
                 Rule::typeLine => {
                     let mut inner = line.into_inner();
@@ -73,14 +77,15 @@ pub fn parse_metrics(unparsed_metrics: String) -> metrics::Metrics {
                     metrics.entry(metric_name)
                         .and_modify(
                             |m| m.r#type = match type_text {
-                                "counter" => metrics::MetricType::COUNTER,
-                                "gauge" => metrics::MetricType::GAUGE,
-                                "histogram" => metrics::MetricType::HISTOGRAM,
-                                "summary" => metrics::MetricType::SUMMARY,
-                                _ => metrics::MetricType::NONE,
+                                "counter" => MetricType::COUNTER,
+                                "gauge" => MetricType::GAUGE,
+                                "histogram" => MetricType::HISTOGRAM,
+                                "summary" => MetricType::SUMMARY,
+                                _ => MetricType::NONE,
                             })
-                        .or_insert(
-                            metrics::MetricGroup::new_with_type(type_text));
+                        .or_insert(MetricGroupBuilder::new()
+                                    .r#type(type_text)
+                                    .build());
                 }
                 Rule::metricLine => {
                     let mut inner = line.into_inner();
@@ -93,9 +98,9 @@ pub fn parse_metrics(unparsed_metrics: String) -> metrics::Metrics {
                         .and_modify(
                             |m| m.metric.0.push(
                                 metrics::add(metric_name, metric_text)))
-                        .or_insert(
-                            metrics::MetricGroup::new_with_metric(
-                                metric_name, metric_text));
+                        .or_insert(MetricGroupBuilder::new()
+                                    .metric(metric_name, metric_text)
+                                    .build());
                 }
                 _ => { () }
             }

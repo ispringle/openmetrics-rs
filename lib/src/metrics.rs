@@ -35,35 +35,47 @@ pub struct MetricGroup {
     pub metric: Metric,
 }
 
-impl MetricGroup {
-    pub fn new_with_help(help_string: &str) -> Self {
-        MetricGroup {
-            help: help_string.to_string(),
-            r#type: Default::default(),
-            metric: Default::default()
-        }
-    }
+#[derive(Default, Debug)]
+pub struct MetricGroupBuilder {
+    pub help: String,
+    pub r#type: MetricType,
+    pub metric: Metric,
+}
 
-    pub fn new_with_type(type_string: &str) -> Self {
-        MetricGroup {
-            help: Default::default(),
-            r#type: match type_string {
-                "counter" => MetricType::COUNTER,
-                "gauge" => MetricType::GAUGE,
-                "histogram" => MetricType::HISTOGRAM,
-                "summary" => MetricType::SUMMARY,
-                _ => MetricType::NONE,
-            },
-            metric: Default::default()
-        }
-    }
-
-    pub fn new_with_metric(metric_name: &str, metric_text: &str) -> Self {
-        MetricGroup {
+impl MetricGroupBuilder {
+    pub fn new() -> Self {
+        Self {
             help: Default::default(),
             r#type: Default::default(),
-            metric: Default::default()
-            //metric: metric_text.to_string()
+            metric: Default::default(),
+        }
+    }
+    pub fn help(mut self, help_string: &str) -> Self {
+        self.help = help_string.to_string();
+        self
+    }
+
+    pub fn r#type(mut self, type_string: &str) -> Self {
+        self.r#type = match type_string {
+            "counter" => MetricType::COUNTER,
+            "gauge" => MetricType::GAUGE,
+            "histogram" => MetricType::HISTOGRAM,
+            "summary" => MetricType::SUMMARY,
+            _ => MetricType::NONE,
+        };
+        self
+    }
+
+    pub fn metric(mut self, metric_name: &str, metric_text: &str) -> Self {
+        self.metric = Default::default();
+        self
+    }
+
+    pub fn build(self) -> MetricGroup {
+        MetricGroup {
+            help: self.help,
+            r#type: self.r#type,
+            metric: self.metric,
         }
     }
 }
