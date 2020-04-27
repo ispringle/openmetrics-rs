@@ -96,10 +96,10 @@ pub fn parse_metrics(unparsed_metrics: String) -> Metrics {
                     };
                     metrics.entry(base_metric_name.clone())
                         .and_modify(
-                            |m| m.metric.0.push(
+                            |m| m.labels.0.push(
                                 metrics::add(metric_name, metric_text)))
                         .or_insert(MetricGroupBuilder::new()
-                                    .metric(metric_name, metric_text)
+                                    .label(metric_name, metric_text)
                                     .build());
                 }
                 _ => { () }

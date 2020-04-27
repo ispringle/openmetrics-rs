@@ -18,9 +18,9 @@ impl Default for MetricType {
 }
 
 #[derive(Default, Debug)]
-pub struct Metric( pub Vec<Label> );
+pub struct Labels( pub Vec<Label> );
 
-impl Metric {
+impl Labels {
     pub fn add(metric_name: &str, metric_text: &str) -> Label {
         let mut metric_hash = HashMap::new();
         metric_hash.insert("value".to_string(), metric_text.to_string());
@@ -32,14 +32,14 @@ impl Metric {
 pub struct MetricGroup {
     pub help: String,
     pub r#type: MetricType,
-    pub metric: Metric,
+    pub labels: Labels,
 }
 
 #[derive(Default, Debug)]
 pub struct MetricGroupBuilder {
     pub help: String,
     pub r#type: MetricType,
-    pub metric: Metric,
+    pub labels: Labels,
 }
 
 impl MetricGroupBuilder {
@@ -47,7 +47,7 @@ impl MetricGroupBuilder {
         Self {
             help: Default::default(),
             r#type: Default::default(),
-            metric: Default::default(),
+            labels: Default::default(),
         }
     }
     pub fn help(mut self, help_string: &str) -> Self {
@@ -66,8 +66,8 @@ impl MetricGroupBuilder {
         self
     }
 
-    pub fn metric(mut self, metric_name: &str, metric_text: &str) -> Self {
-        self.metric = Default::default();
+    pub fn label(mut self, metric_name: &str, metric_text: &str) -> Self {
+        self.labels = Default::default();
         self
     }
 
@@ -75,7 +75,7 @@ impl MetricGroupBuilder {
         MetricGroup {
             help: self.help,
             r#type: self.r#type,
-            metric: self.metric,
+            labels: self.labels,
         }
     }
 }
