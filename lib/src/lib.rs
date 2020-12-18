@@ -60,7 +60,7 @@ pub fn parse_metrics(unparsed_metrics: String) -> Metrics {
                         Some(t) => t.as_str(),
                         _ => "",
                     };
-                    metrics.entry(metric_name)
+                    metrics.data.entry(metric_name)
                         .and_modify(|m| m.help = help_text.to_string())
                         .or_insert(MetricGroupBuilder::new()
                                     .help(help_text)
@@ -74,7 +74,7 @@ pub fn parse_metrics(unparsed_metrics: String) -> Metrics {
                         Some(t) => t.as_str(),
                         _ => "",
                     };
-                    metrics.entry(metric_name)
+                    metrics.data.entry(metric_name)
                         .and_modify(
                             |m| m.r#type = match type_text {
                                 "counter" => MetricType::COUNTER,
@@ -94,7 +94,7 @@ pub fn parse_metrics(unparsed_metrics: String) -> Metrics {
                         Some(t) => t.as_str(),
                         _ => "",
                     };
-                    metrics.entry(base_metric_name.clone())
+                    metrics.data.entry(base_metric_name.clone())
                         .and_modify(
                             |m| m.labels.0.push(
                                 metrics::add(metric_name, metric_text)))

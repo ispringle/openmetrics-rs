@@ -80,14 +80,29 @@ impl MetricGroupBuilder {
     }
 }
 
-pub type Metrics = HashMap<String, MetricGroup>;
-//#[derive(Default, Debug)]
-//pub struct Metrics( HashMap<String, MetricGroup> );
-//impl Metrics {
-//    pub fn new() -> Self {
-//        Default::default()
-//    }
-//}
+pub type MetricsHashMap = HashMap<String, MetricGroup>;
+
+#[derive(Default, Debug)]
+pub struct MetricsMetadata {
+    pub scrape_time: String,
+    pub scrape_src: String,
+}
+
+#[derive(Default, Debug)]
+pub struct Metrics{
+    pub meta: MetricsMetadata,
+    pub data: MetricsHashMap
+
+}
+impl Metrics {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    pub fn from_file(filePath: &str) -> Self {
+
+    }
+}
 
 pub fn add(metric_name: &str, metric_text: &str) -> Label {
     let mut metric_hash = HashMap::new();
